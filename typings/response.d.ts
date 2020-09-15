@@ -9,3 +9,13 @@ export interface IGetService {
 		};
 	};
 }
+
+export interface IGetBucket {
+	ListBucketResult: {
+		Name: string;
+		Prefix: string;
+		Marker: string;
+		MaxKeys: number;
+		IsTruncated: boolean;
+	};
+}

@@ -3,7 +3,8 @@ import * as request from 'request';
 import * as QS from 'querystring';
 import * as FileType from 'file-type';
 import * as XMLParser from 'fast-xml-parser';
-import { IGetService } from './typings/response';
+
+import { IGetBucket, IGetService } from '../typings/response';
 
 export type HttpMethod = 'PUT' | 'POST' | 'DELETE' | 'GET';
 export type ACL = 'private' | 'public-read' | 'public-read-write' | 'authenticated-read' | 'bucket-owner-read' | 'bucket-owner-control';
@@ -15,7 +16,7 @@ export default class Api {
 
 	private _secretKey: string;
 
-	private _region: string;
+	private _region: Region;
 
 	constructor(accessKey: string, secretKey: string, region: Region) {
 		this._accessKey = accessKey;
@@ -43,6 +44,22 @@ export default class Api {
 	// #endregion
 
 	// #region Bucket API
+
+	public async putBucket(bucket: string): Promise<void> {
+		await this._request('PUT', bucket, '/');
+	}
+
+	public async putBucketAcl(bucket: string, acl: ACL): Promise<void> {
+		await this._request('PUT', bucket, '/', { 'x-amz-acl': acl }, '', { acl: '' });
+	}
+
+	public async getBucket(bucket: string): Promise<IGetBucket> {
+		return this._request<IGetBucket>('GET', bucket, '/');
+	}
+
+	public async deleteBucket(bucket: string): Promise<void> {
+		await this._request('DELETE', bucket, '/');
+	}
 
 	// #endregion
 
@@ -104,7 +121,7 @@ export default class Api {
 				if (message) {
 					try {
 						data = XMLParser.parse(message);
-					// tslint:disable-next-line: no-empty
+						// tslint:disable-next-line: no-empty
 					} catch (e) { }
 				}
 				if (res.statusCode >= 400) {

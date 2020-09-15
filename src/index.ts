@@ -10,7 +10,6 @@ export {
 /*
 https://www.scaleway.com/en/docs/s3-object-storage-api/
 
-DELETE Bucket	✔	Deletes bucket
 DELETE Bucket analytics	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 DELETE Bucket CORS	✔	Deletes the CORS configuration of a bucket
 DELETE Bucket encryption	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
@@ -21,7 +20,6 @@ DELETE Bucket policy	✘	We are eagerly awaiting for your feedback! Please get i
 DELETE Bucket replication	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 DELETE Bucket taging	✔	Deletes the tag(s) of a bucket
 DELETE Bucket website	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
-GET Bucket	✔	Lists objects
 GET Bucket accelerate	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 GET Bucket ACL	✔	Returns the bucket ACL
 GET Bucket analytics	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
@@ -44,9 +42,7 @@ HEAD Bucket	✔	Checks if the bucket exists
 List Bucket Analytics Configurations	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 List Bucket Inventory Configurations	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 List Bucket Metrics Configurations	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
-PUT Bucket	✔	Creates bucket
 PUT Bucket accelerate	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
-PUT Bucket ACL	✔	Configures the Access Control List of a bucket
 PUT Bucket analytics	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 PUT Bucket CORS	✔	Configures Cross-origin ressource sharing(CORS) on a bucket
 PUT Bucket encryption	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
