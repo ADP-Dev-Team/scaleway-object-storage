@@ -65,11 +65,10 @@ export default class Api {
 
 	// #region Object API
 
-	public async putObject(bucket: string, name: string, content: Buffer | string, dir: string = '/'): Promise<void> {
-		let contentType: string = 'text/plain';
+	public async putObject(bucket: string, name: string, content: Buffer | string, dir: string = '/', contentType: string = 'text/plain'): Promise<void> {
 		if (content instanceof Buffer) {
 			const type = await FileType.fromBuffer(content);
-			contentType = type?.mime;
+			contentType = type?.mime || contentType;
 		}
 		await this._request('PUT', bucket, this._getPath(name, dir), {
 			'Content-Type': contentType,
