@@ -1,7 +1,7 @@
 {
 	"name": "scw-object-storage",
 	"version": "0.1.0",
-	"description": "",
+	"description": "Scaleway object storage connector.",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
@@ -52,5 +52,19 @@
 		"tslint": "^6.1.3",
 		"typedoc": "^0.18.0",
 		"typescript": "^4.0.2"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/zabkwak/scaleway-object-storage.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zabkwak/scaleway-object-storage/issues"
+	},
+	"homepage": "https://github.com/zabkwak/scaleway-object-storage#readme",
+	"keywords": [
+		"scaleway",
+		"object",
+		"storage",
+		"s3"
+	]
 }
