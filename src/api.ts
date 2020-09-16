@@ -2,6 +2,7 @@ import * as aws4 from 'aws4';
 import * as QS from 'querystring';
 import * as FileType from 'file-type';
 import * as XMLParser from 'fast-xml-parser';
+import * as XMLBuilder from 'xmlbuilder2';
 import fetch from 'node-fetch';
 
 import { IGetBucket, IGetService } from '../typings/response';
@@ -53,6 +54,14 @@ export default class Api {
 		await this._request('PUT', bucket, '/', { 'x-amz-acl': acl }, '', { acl: '' });
 	}
 
+	public async putBucketVersioning(bucket: string): Promise<void> {
+		const body = XMLBuilder.create()
+			.ele('VersioningConfiguration', { xmlns: 'http://s3.amazonaws.com/doc/2006-03-01/' })
+			.ele('Status').txt('Enabled')
+			.end({ headless: true });
+		await this._request('PUT', bucket, '/', undefined, body, { versioning: '' });
+	}
+
 	public async getBucket(bucket: string): Promise<IGetBucket> {
 		return this._request<IGetBucket>('GET', bucket, '/');
 	}
@@ -88,7 +97,12 @@ export default class Api {
 		await this._request('DELETE', bucket, this._getPath(name, dir), hash.headers);
 	}
 
+	/** @deprecated */
 	public getObjectUrl(bucket: string, name: string, dir: string = '/'): string {
+		return this.getPublicUrl(bucket, name, dir);
+	}
+
+	public getPublicUrl(bucket: string, name: string, dir: string = '/'): string {
 		return this._getUri(bucket, name, dir);
 	}
 

@@ -39,12 +39,17 @@ describe('Api', () => {
 			await storage.putBucketAcl('test-api', 'public-read');
 		});
 
+		it('.putBucketVersioning', async () => {
+			await storage.putBucketVersioning('test-api');
+		});
+
 		it('.deleteBucket', async () => {
 			await storage.deleteBucket('test-api');
 		});
 	});
 
 	describe('Object', () => {
+
 		it('.putObject', async () => {
 			await storage.putObject(BUCKET, 'test.txt', 'TEST');
 			await storage.putObject(BUCKET, 'test.png', await fs.readFile(path.resolve(__dirname, './assets/logo.png')), 'test');
