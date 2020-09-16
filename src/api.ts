@@ -5,6 +5,7 @@ import * as XMLParser from 'fast-xml-parser';
 import * as XMLBuilder from 'xmlbuilder2';
 import fetch from 'node-fetch';
 
+import Bucket from './bucket';
 import { IGetBucket, IGetService } from '../typings/response';
 
 export type HttpMethod = 'PUT' | 'POST' | 'DELETE' | 'GET';
@@ -12,6 +13,17 @@ export type ACL = 'private' | 'public-read' | 'public-read-write' | 'authenticat
 export type Region = 'fr-par' | 'nl-ams' | string;
 
 export default class Api {
+
+	public get Bucket(): new (name: string) => Bucket {
+		const self = this;
+		// tslint:disable-next-line: max-classes-per-file
+		return class extends Bucket {
+
+			constructor(name: string) {
+				super(self, name);
+			}
+		}
+	}
 
 	private _accessKey: string;
 
@@ -46,14 +58,30 @@ export default class Api {
 
 	// #region Bucket API
 
+	/**
+	 * Creates the bucket.
+	 *
+	 * @param bucket Name of the bucket.
+	 */
 	public async putBucket(bucket: string): Promise<void> {
 		await this._request('PUT', bucket, '/');
 	}
 
+	/**
+	 * Updates the visibility of the bucket.
+	 *
+	 * @param bucket Name of the bucket.
+	 * @param acl ACL permissions of the bucket.
+	 */
 	public async putBucketAcl(bucket: string, acl: ACL): Promise<void> {
 		await this._request('PUT', bucket, '/', { 'x-amz-acl': acl }, '', { acl: '' });
 	}
 
+	/**
+	 * Enables the versioning of the bucket.
+	 *
+	 * @param bucket Name fo the bucket.
+	 */
 	public async putBucketVersioning(bucket: string): Promise<void> {
 		const body = XMLBuilder.create()
 			.ele('VersioningConfiguration', { xmlns: 'http://s3.amazonaws.com/doc/2006-03-01/' })
@@ -62,10 +90,20 @@ export default class Api {
 		await this._request('PUT', bucket, '/', undefined, body, { versioning: '' });
 	}
 
+	/**
+	 * Gets the bucket info.
+	 *
+	 * @param bucket Name of the bucket.
+	 */
 	public async getBucket(bucket: string): Promise<IGetBucket> {
 		return this._request<IGetBucket>('GET', bucket, '/');
 	}
 
+	/**
+	 * Deletes the bucket.
+	 *
+	 * @param bucket Name of the bucket.
+	 */
 	public async deleteBucket(bucket: string): Promise<void> {
 		await this._request('DELETE', bucket, '/');
 	}
@@ -93,8 +131,7 @@ export default class Api {
 	}
 
 	public async deleteObject(bucket: string, name: string, dir: string = '/'): Promise<void> {
-		const hash = this._createHash('DELETE', bucket, this._getPath(name, dir));
-		await this._request('DELETE', bucket, this._getPath(name, dir), hash.headers);
+		await this._request('DELETE', bucket, this._getPath(name, dir));
 	}
 
 	/** @deprecated */

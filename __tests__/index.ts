@@ -118,3 +118,19 @@ describe('Api', () => {
 	});
 
 });
+
+describe('Helpers', () => {
+
+	describe('Bucket', () => {
+
+		const bucket = new storage.Bucket('api-test-bucket-helper');
+
+		it('.create', async () => {
+			await bucket.create();
+		});
+
+		it('.delete', async () => {
+			await bucket.delete();
+		});
+	});
+});

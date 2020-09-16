@@ -1,7 +1,9 @@
 import Api from './api';
+import Bucket from './bucket';
 
 export {
 	Api as default,
+	Bucket,
 };
 
 // TODO Bucket class
@@ -55,7 +57,6 @@ PUT Bucket policy	✘	We are eagerly awaiting for your feedback! Please get in t
 PUT Bucket replication	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 PUT Bucket requestPayment	✘	Unscheduled
 PUT Bucket tagging	✔	Sets the tag(s) of a bucket
-PUT Bucket versioning	✔	Sets the versioning state of an existing bucket
 PUT Bucket website	✘	We are eagerly awaiting for your feedback! Please get in touch with us on Slack for this feature request development
 
 DELETE Multiple Objects	✔	Deletes multiple object with one call
