@@ -51,13 +51,14 @@ describe('Api', () => {
 		});
 
 		it('.getObject', async () => {
-			const text: string = await storage.getObject(BUCKET, 'test.txt');
-			expect(text).to.be.equal('TEST');
-			const image: string = await storage.getObject(BUCKET, 'test.png', 'test');
-			// const file: Buffer = await fs.readFile(path.resolve(__dirname, './assets/logo.png'));
-			// expect(image).to.be.an.instanceOf(Buffer);
+			const text: Buffer = await storage.getObject(BUCKET, 'test.txt');
+			expect(text).to.be.an.instanceOf(Buffer);
+			expect(text.toString()).to.be.equal('TEST');
+			const image: Buffer = await storage.getObject(BUCKET, 'test.png', 'test');
+			const file: Buffer = await fs.readFile(path.resolve(__dirname, './assets/logo.png'));
+			expect(image).to.be.an.instanceOf(Buffer);
 			// await fs.writeFile('./test.png', image);
-			// expect(file.byteLength).to.be.equal(image.length);
+			expect(file.byteLength).to.be.equal(image.byteLength);
 		});
 
 		it('.putObjectAcl', async () => {

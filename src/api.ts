@@ -1,8 +1,8 @@
 import * as aws4 from 'aws4';
-import * as request from 'request';
 import * as QS from 'querystring';
 import * as FileType from 'file-type';
 import * as XMLParser from 'fast-xml-parser';
+import fetch from 'node-fetch';
 
 import { IGetBucket, IGetService } from '../typings/response';
 
@@ -79,7 +79,7 @@ export default class Api {
 		await this._request('PUT', bucket, this._getPath(name, dir), { 'x-amz-acl': acl }, '', { acl: '' });
 	}
 
-	public async getObject(bucket: string, name: string, dir: string = '/'): Promise<string> {
+	public async getObject(bucket: string, name: string, dir: string = '/'): Promise<Buffer> {
 		return this._request('GET', bucket, this._getPath(name, dir));
 	}
 
@@ -94,7 +94,7 @@ export default class Api {
 
 	// #endregion
 
-	private _request<T = any>(
+	private async _request<T = any>(
 		method: HttpMethod,
 		bucket: string,
 		path: string,
@@ -103,33 +103,28 @@ export default class Api {
 		qs?: any, // TODO types
 	): Promise<T> {
 		const q = QS.stringify(qs);
-		const hash = this._createHash(method, bucket, !q ? path : `${path}?${q}`, headers);
-		return new Promise((resolve, reject) => {
-			request({
-				uri: `https://${this._getHost(bucket)}${path}`,
-				method,
-				headers: hash.headers,
-				body,
-				qs,
-			}, (err, res, message) => {
-				if (err) {
-					reject(err);
-					return;
-				}
-				let data;
-				if (message) {
-					try {
-						data = XMLParser.parse(message);
-						// tslint:disable-next-line: no-empty
-					} catch (e) { }
-				}
-				if (res.statusCode >= 400) {
-					reject(data?.Error || 'Unknown error');
-					return;
-				}
-				resolve(data || message);
-			});
+		if (q) {
+			path = `${path}?${q}`;
+		}
+		const hash = this._createHash(method, bucket, path, headers);
+		const r = await fetch(`https://${this._getHost(bucket)}${path}`, {
+			method,
+			headers: hash.headers,
+			body,
 		});
+		const buffer = await r.buffer();
+		const message = buffer.toString();
+		let data;
+		if (message) {
+			try {
+				data = XMLParser.parse(message);
+				// tslint:disable-next-line: no-empty
+			} catch (e) { }
+		}
+		if (r.status >= 400) {
+			throw data?.Error || 'Unknown error';
+		}
+		return data || buffer;
 	}
 
 	private _createHash(method: HttpMethod, bucket: string, path: string, headers?: { [key: string]: string }) {
