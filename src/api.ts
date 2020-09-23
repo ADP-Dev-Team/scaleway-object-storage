@@ -166,7 +166,7 @@ export default class Api {
 		const buffer = await r.buffer();
 		const message = buffer.toString();
 		let data;
-		if (message) {
+		if (message && XMLParser.validate(message) === true) {
 			try {
 				data = XMLParser.parse(message);
 				// tslint:disable-next-line: no-empty
