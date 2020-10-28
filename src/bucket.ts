@@ -1,3 +1,4 @@
+import { ReadStream } from 'fs';
 import { IBucket } from '../typings/model';
 import { IGetBucket } from '../typings/response';
 import Api, { ACL } from './api';
@@ -41,7 +42,7 @@ export default class Bucket {
 
 	public async putObject(
 		name: string,
-		content: Buffer | string,
+		content: Buffer | ReadStream | string,
 		dir: string = '/',
 		contentType: string = 'text/plain',
 	): Promise<void> {

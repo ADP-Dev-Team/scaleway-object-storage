@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { promises as fs, readFileSync } from 'fs';
+import { promises as fs, readFileSync, createReadStream } from 'fs';
 import * as path from 'path';
 import * as request from 'request';
 
@@ -53,6 +53,7 @@ describe('Api', () => {
 		it('.putObject', async () => {
 			await storage.putObject(BUCKET, 'test.txt', 'TEST');
 			await storage.putObject(BUCKET, 'test.png', await fs.readFile(path.resolve(__dirname, './assets/logo.png')), 'test');
+			await storage.putObject(BUCKET, 'test-stream.png', createReadStream(path.resolve(__dirname, './assets/logo.png')), 'test');
 		});
 
 		it('.getObject', async () => {
@@ -94,6 +95,7 @@ describe('Api', () => {
 		it('.deleteObject', async () => {
 			await storage.deleteObject(BUCKET, 'test.txt');
 			await storage.deleteObject(BUCKET, 'test.png', 'test');
+			await storage.deleteObject(BUCKET, 'test-stream.png', 'test');
 		});
 
 		it('checks if the text file does not have public access', (done) => {

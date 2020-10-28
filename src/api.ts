@@ -1,7 +1,8 @@
 import * as aws4 from 'aws4';
 import * as QS from 'querystring';
-import * as FileType from 'file-type';
 import * as XMLParser from 'fast-xml-parser';
+import * as FileType from 'file-type';
+import { ReadStream } from 'fs';
 import * as XMLBuilder from 'xmlbuilder2';
 import fetch from 'node-fetch';
 
@@ -112,7 +113,13 @@ export default class Api {
 
 	// #region Object API
 
-	public async putObject(bucket: string, name: string, content: Buffer | string, dir: string = '/', contentType: string = 'text/plain'): Promise<void> {
+	public async putObject(
+		bucket: string,
+		name: string,
+		content: Buffer | ReadStream | string,
+		dir: string = '/',
+		contentType: string = 'text/plain',
+	): Promise<void> {
 		if (content instanceof Buffer) {
 			const type = await FileType.fromBuffer(content);
 			contentType = type?.mime || contentType;
