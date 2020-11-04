@@ -54,6 +54,7 @@ describe('Api', () => {
 			await storage.putObject(BUCKET, 'test.txt', 'TEST');
 			await storage.putObject(BUCKET, 'test.png', await fs.readFile(path.resolve(__dirname, './assets/logo.png')), 'test');
 			await storage.putObject(BUCKET, 'test-stream.png', createReadStream(path.resolve(__dirname, './assets/logo.png')), 'test');
+			await storage.putObject(BUCKET, 'test.xml', createReadStream(path.resolve(__dirname, './assets/test.xml')), 'test');
 		});
 
 		it('.getObject', async () => {
@@ -65,6 +66,12 @@ describe('Api', () => {
 			expect(image).to.be.an.instanceOf(Buffer);
 			// await fs.writeFile('./test.png', image);
 			expect(file.byteLength).to.be.equal(image.byteLength);
+
+			const xml: Buffer = await storage.getObject(BUCKET, 'test.xml', 'test');
+			const xmlFile: Buffer = await fs.readFile(path.resolve(__dirname, './assets/test.xml'));
+			expect(xml).to.be.an.instanceOf(Buffer);
+			expect(xmlFile.byteLength).to.be.equal(xml.byteLength);
+			expect(xmlFile.toString()).to.be.equal(xml.toString());
 		});
 
 		it('.putObjectAcl', async () => {
@@ -96,6 +103,7 @@ describe('Api', () => {
 			await storage.deleteObject(BUCKET, 'test.txt');
 			await storage.deleteObject(BUCKET, 'test.png', 'test');
 			await storage.deleteObject(BUCKET, 'test-stream.png', 'test');
+			await storage.deleteObject(BUCKET, 'test.xml', 'test');
 		});
 
 		it('checks if the text file does not have public access', (done) => {

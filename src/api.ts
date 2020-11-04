@@ -134,7 +134,7 @@ export default class Api {
 	}
 
 	public async getObject(bucket: string, name: string, dir: string = '/'): Promise<Buffer> {
-		return this._request('GET', bucket, this._getPath(name, dir));
+		return this._request('GET', bucket, this._getPath(name, dir), undefined, undefined, undefined, true);
 	}
 
 	public async deleteObject(bucket: string, name: string, dir: string = '/'): Promise<void> {
@@ -159,6 +159,7 @@ export default class Api {
 		headers?: any, // TODO types
 		body?: any, // TODO types
 		qs?: any, // TODO types
+		forceBuffer: boolean = false,
 	): Promise<T> {
 		const q = QS.stringify(qs);
 		if (q) {
@@ -181,6 +182,9 @@ export default class Api {
 		}
 		if (r.status >= 400) {
 			throw data?.Error || 'Unknown error';
+		}
+		if (forceBuffer) {
+			return buffer as any;
 		}
 		return data || buffer;
 	}
