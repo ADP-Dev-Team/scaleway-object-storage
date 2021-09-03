@@ -21,7 +21,7 @@ describe('Api', () => {
 
 		it('.putBucket', async () => {
 			await storage.putBucket('test-api');
-		});
+		}).timeout(5000);
 
 		it('.getBucket', async () => {
 			const bucket = await storage.getBucket('test-api');
@@ -51,11 +51,11 @@ describe('Api', () => {
 	describe('Object', () => {
 
 		it('.putObject', async () => {
-			await storage.putObject(BUCKET, 'test.txt', 'TEST');
+			await storage.putObject(BUCKET, 'test.txt', 'TEST', undefined, undefined, { test: 'test' });
 			await storage.putObject(BUCKET, 'test.png', await fs.readFile(path.resolve(__dirname, './assets/logo.png')), 'test');
 			await storage.putObject(BUCKET, 'test-stream.png', createReadStream(path.resolve(__dirname, './assets/logo.png')), 'test');
 			await storage.putObject(BUCKET, 'test.xml', createReadStream(path.resolve(__dirname, './assets/test.xml')), 'test');
-		});
+		}).timeout(10000);
 
 		it('.getObject', async () => {
 			const text: Buffer = await storage.getObject(BUCKET, 'test.txt');

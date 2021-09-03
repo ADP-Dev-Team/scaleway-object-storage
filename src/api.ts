@@ -119,6 +119,7 @@ export default class Api {
 		content: Buffer | ReadStream | string,
 		dir: string = '/',
 		contentType: string = 'text/plain',
+		metaData: Record<string, any> = {},
 	): Promise<void> {
 		if (content instanceof Buffer) {
 			const type = await FileType.fromBuffer(content);
@@ -126,6 +127,7 @@ export default class Api {
 		}
 		await this._request('PUT', bucket, this._getPath(name, dir), {
 			'Content-Type': contentType,
+			...this._createMetaDataHeaders(metaData),
 		}, content);
 	}
 
@@ -208,6 +210,19 @@ export default class Api {
 			secretAccessKey: this._secretKey,
 			region: this._region,
 		});
+	}
+
+	private _createMetaDataHeaders(metaData: Record<string, any>): Record<string, any> {
+		const keys = Object.keys(metaData);
+		if (!keys.length) {
+			return {};
+		}
+		return keys.reduce((result, key) => {
+			return {
+				...result,
+				[`x-amz-meta-${key}`]: metaData[key],
+			};
+		}, {});
 	}
 
 	private _getUri(bucket: string, name: string, dir: string = '/', params: any = {}): string {
