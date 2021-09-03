@@ -45,8 +45,9 @@ export default class Bucket {
 		content: Buffer | ReadStream | string,
 		dir: string = '/',
 		contentType: string = 'text/plain',
+		metaData: Record<string, any> = {},
 	): Promise<void> {
-		await this._api.putObject(this._name, name, content, dir, contentType);
+		await this._api.putObject(this._name, name, content, dir, contentType, metaData);
 	}
 
 	public async putObjectAcl(name: string, acl: ACL, dir: string = '/'): Promise<void> {
