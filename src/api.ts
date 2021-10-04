@@ -120,6 +120,7 @@ export default class Api {
 		dir: string = '/',
 		contentType: string = 'text/plain',
 		metaData: Record<string, any> = {},
+		additionalParams: Record<string, any> = {}
 	): Promise<void> {
 		if (content instanceof Buffer) {
 			const type = await FileType.fromBuffer(content);
@@ -128,6 +129,7 @@ export default class Api {
 		await this._request('PUT', bucket, this._getPath(name, dir), {
 			'Content-Type': contentType,
 			...this._createMetaDataHeaders(metaData),
+			...additionalParams
 		}, content);
 	}
 
