@@ -46,7 +46,7 @@ export default class Bucket {
 		dir: string = '/',
 		contentType: string = 'text/plain',
 		metaData: Record<string, any> = {},
-		additionalParams: Record<string, any> = {}
+		additionalParams: Record<string, any> = {},
 	): Promise<void> {
 		await this._api.putObject(this._name, name, content, dir, contentType, metaData, additionalParams);
 	}

@@ -1,6 +1,6 @@
 {
 	"name": "scw-object-storage",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Scaleway object storage connector.",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
