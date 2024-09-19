@@ -1,10 +1,10 @@
 import * as aws4 from 'aws4';
 import * as QS from 'querystring';
-import * as XMLParser from 'fast-xml-parser';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import * as FileType from 'file-type';
 import { ReadStream } from 'fs';
 import * as XMLBuilder from 'xmlbuilder2';
-import fetch from 'node-fetch';
+import fetch, { HeadersInit } from 'node-fetch';
 
 import Bucket from './bucket';
 import { IGetBucket, IGetService } from '../typings/response';
@@ -123,7 +123,7 @@ export default class Api {
 		additionalParams: Record<string, any> = {},
 	): Promise<void> {
 		if (content instanceof Buffer) {
-			const type = await FileType.fromBuffer(content);
+			const type = await FileType.fileTypeFromBuffer(content);
 			contentType = type?.mime || contentType;
 		}
 		await this._request('PUT', bucket, this._getPath(name, dir), {
@@ -172,15 +172,15 @@ export default class Api {
 		const hash = this._createHash(method, bucket, path, headers);
 		const r = await fetch(`https://${this._getHost(bucket)}${path}`, {
 			method,
-			headers: hash.headers,
+			headers: hash.headers as HeadersInit,
 			body,
 		});
 		const buffer = await r.buffer();
 		const message = buffer.toString();
 		let data;
-		if (message && XMLParser.validate(message) === true) {
+		if (message && XMLValidator.validate(message) === true) {
 			try {
-				data = XMLParser.parse(message);
+				data = (new XMLParser()).parse(message);
 				// tslint:disable-next-line: no-empty
 			} catch (e) { }
 		}
@@ -210,7 +210,6 @@ export default class Api {
 		}, {
 			accessKeyId: this._accessKey,
 			secretAccessKey: this._secretKey,
-			region: this._region,
 		});
 	}
 
